@@ -1,0 +1,74 @@
+---
+title: 'Install Armbian Linux pada STB'
+date: '2025-01-19'
+tags: ['linux', 'tutorial']
+draft: false
+summary: 'Tutorial install armbian linux pada STB (Set Top Box)'
+authors: ['default']
+---
+
+# Tutorial Install Armbian Linux pada STB
+
+## Requirements
+1. **STB type:** HG680P/B860H  
+2. **Micro SD card**
+
+---
+
+## Steps
+
+### 1. Download Armbian Linux Distro
+- Kunjungi repository Armbian di GitHub: [ophub/amlogic-s9xxx-armbian](https://github.com/ophub/amlogic-s9xxx-armbian).
+- Sesuaikan versi perangkat STB dengan SoC yang digunakan. Untuk **HG680P**, pilih SoC **s905x**.
+- Pilih distro dan versi yang diinginkan. Contoh: **Debian 11 "Bullseye"** dari tautan ini: [Armbian Bullseye](https://github.com/ophub/amlogic-s9xxx-armbian/releases/download/Armbian_bullseye_save_2025.01/Armbian_25.02.0_amlogic_s905x_bullseye_6.1.122_server_2025.01.01.img.gz).
+
+### 2. Download Distro
+Unduh file .img.gz sesuai tautan yang telah dipilih.
+
+### 3. Buat Bootable Armbian pada Micro SD
+- Gunakan aplikasi seperti **Balena Etcher** atau **Rufus** untuk membuat bootable image pada Micro SD card.
+
+### 4. Salin Path FDT
+- Setelah Micro SD menjadi bootable, akses folder **extlinux**.
+- Buka file `extlinux.conf` dan salin path FDT yang ada, misalnya:  
+  ```
+  /dtb/amlogic/meson-gxl-s905x-p212.dtb
+  ```
+
+### 5. Edit File boot.ini
+- Temukan file `boot.ini` pada Micro SD.
+- Cari baris berikut:
+  ```
+  if test "${devtype}" = ""; then setenv devtype "mmc"; fi
+  ```
+- Ubah menjadi:
+  ```
+  if test "${devtype}" = ""; then setenv devtype "/dtb/amlogic/meson-gxl-s905x-p212.dtb"; fi
+  ```
+  (Gunakan path FDT yang telah disalin sebelumnya).
+
+### 6. Ubah File U-Boot
+- Cari file U-Boot sesuai SoC. Untuk SoC **s905x**, gunakan `u-boot-s905x-s912.bin`.
+- Ubah ekstensi file tersebut menjadi `.ext`, misalnya:
+  ```
+  u-boot-s905x-s912.ext
+  ```
+
+### 7. Siapkan Bootable
+Setelah semua langkah selesai, Micro SD siap digunakan sebagai bootable.
+
+### 8. Boot STB dengan Micro SD
+- Masukkan Micro SD card ke STB.
+- Reboot STB.
+
+### 9. Tunggu Proses Booting
+- Setelah reboot, STB akan menampilkan terminal CLI Linux Armbian.
+- Tunggu hingga proses booting selesai.
+
+### 10. Setup Root Password
+- Setelah booting selesai, sistem akan meminta setup password untuk user `root`.
+- Masukkan password sesuai keinginan.
+- Selanjutnya, sistem akan meminta untuk membuat user baru. Jika tidak ingin membuat user baru, tekan `Ctrl + C`.
+
+### 11. Selesai
+Armbian siap digunakan pada STB Anda!
